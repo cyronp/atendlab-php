@@ -15,6 +15,7 @@
   gap: 1rem;
   align-items: stretch;
   justify-content: center;
+  position: relative;
   background-color: white;
   padding: 2rem;
   border-radius: 1rem;
@@ -29,14 +30,43 @@
   gap: 0.75rem;
 }
 
+.modal-header {
+  width: 100%;
+}
+
 .modal-title {
   font-size: 1.2rem;
   font-weight: bold;
   color: oklch(30% 0 0);
   border-bottom: 1px solid oklch(70.8% 0 0);
   padding-bottom: 0.75rem;
-  margin: 0 0 0.25rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin: 0;
   text-align: center;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: none;
+  background: transparent;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close-button img {
+  width: 1rem;
+  height: 1rem;
+}
+
+.modal-close-button:hover {
+  background-color: oklch(92.2% 0 0);
 }
 
 .modal-input {
@@ -48,7 +78,7 @@
   transition: background-color 0.3s ease;
 }
 
-.modal-input:focus{
+.modal-input:focus {
   outline: 2px solid oklch(60.6% 0.25 292.717);
 }
 
@@ -65,7 +95,7 @@
 .modal-button {
   border: none;
   padding: 1rem;
-  background-color: oklch(60.6% 0.25 292.717) ;
+  background-color: oklch(60.6% 0.25 292.717);
   border-radius: 1rem;
   color: white;
   font-weight: bold;
@@ -74,11 +104,11 @@
   transition: background-color 0.3s ease;
 }
 
-.modal-button:hover{
+.modal-button:hover {
   background-color: oklch(70.2% 0.183 293.541);
 }
 
-.visible{
+.visible {
   display: flex;
 }
 
@@ -87,6 +117,7 @@
     opacity: 0;
     transform: translateY(4rem);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
