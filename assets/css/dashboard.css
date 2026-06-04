@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+
+body {
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-family: "Inter", sans-serif;
+}
+
+.title{
+    font-size: 1.5rem;
+}
+
+.dashboard-header{
+    background: oklch(82.7% 0.119 306.383);
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding: 0 1rem;
+    justify-content: space-between;
+}
+
+.header-navigation{
+    display: flex;
+    gap: 2rem;
+}
+
+.header-navigation * {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.header-navigation *:hover{
+    color: rgb(46, 46, 46);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: rgb(46, 46, 46);
+}
+
+.header-misc {
+    display: flex;
+    gap: 1rem;
+}
+
+.header-misc * {
+    cursor: pointer;
+}
+
+.header-misc *:hover{
+    color: rgb(46, 46, 46);
+}
+
+.dashboard-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.dashboard-container{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
