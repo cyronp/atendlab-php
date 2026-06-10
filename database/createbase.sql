@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS pessoas (
 
 CREATE TABLE IF NOT EXISTS tipos_atendimentos (
     id         INT AUTO_INCREMENT PRIMARY KEY,
-    nome       VARCHAR(255) NOT NULL,
+    nome       VARCHAR(255) NOT NULL UNIQUE,
     descricao  TEXT,
     status     ENUM('ativo', 'inativo') DEFAULT 'ativo'
 );
