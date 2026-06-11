@@ -143,7 +143,7 @@ class atendimentoController
         $hora_atendimento = $_POST['hora_atendimento'] ?? '';
         $descricao = trim($_POST['descricao'] ?? '');
         $observacao = trim($_POST['observacao'] ?? '');
-        $status = $_POST['status'] ?? 'aberto';
+        $status = strtolower(trim($_POST['status'] ?? 'ativo'));
 
         if (!$pessoa_id || !$usuario_id || !$tipo_atendimento_id) {
 
@@ -261,7 +261,7 @@ class atendimentoController
         $hora_atendimento = $_POST['hora_atendimento'] ?? '';
         $descricao = trim($_POST['descricao'] ?? '');
         $observacao = trim($_POST['observacao'] ?? '');
-        $status = $_POST['status'] ?? 'aberto';
+        $status = strtolower(trim($_POST['status'] ?? 'ativo'));
 
         if (!$id || !$pessoa_id || !$usuario_id || !$tipo_atendimento_id) {
 
@@ -379,7 +379,7 @@ class atendimentoController
         header('Content-Type: application/json; charset=utf-8');
 
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        $status = $_POST['status'] ?? '';
+        $status = strtolower(trim($_POST['status'] ?? 'ativo'));
 
         if (!$id) {
 

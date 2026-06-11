@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS pessoas (
     id         INT AUTO_INCREMENT PRIMARY KEY,
     nome       VARCHAR(100) NOT NULL,
-    cpf        VARCHAR(20)  UNIQUE,
+    cpf        CHAR(11)  UNIQUE,
     telefone   VARCHAR(20) NOT NULL,
-    email      VARCHAR(150) NOT NULL,
+    email      VARCHAR(150) NOT NULL UNIQUE,
     curso      VARCHAR(100),
     periodo    VARCHAR(100),
     status     ENUM('ativo', 'inativo') DEFAULT 'ativo',
