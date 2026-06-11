@@ -2,6 +2,9 @@
 
 require_once __DIR__ . '/../Controllers/usuarioController.php';
 require_once __DIR__ . '/../Controllers/pessoasController.php';
+require_once __DIR__ . '/../Controllers/atendimentoController.php';
+require_once __DIR__ . '/../Controllers/tipoAtendimentoController.php';
+
 
 $controller = $_GET['controller'] ?? 'home';
 $action = $_GET['action'] ?? 'index';
@@ -13,6 +16,13 @@ switch ($controller) {
 
   case 'pessoas':
     $controllerObj = new PessoasController();
+    break;
+  
+  case 'tpatendimento':
+    $controllerObj = new tipoAtendimentoController();
+    break;
+  case 'atendimento':
+    $controllerObj = new atendimentoController();
     break;
 
   default:
@@ -40,6 +50,14 @@ switch ($action) {
 
   case 'excluir':
     $controllerObj->excluir();
+    break;
+
+  case 'visualizar':
+    $controllerObj->visualizar();
+    break;
+
+  case 'alterarStatus':
+    $controllerObj->alterarStatus();
     break;
 
   default:
