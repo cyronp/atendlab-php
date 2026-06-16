@@ -1,15 +1,27 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-if (!isset($_SESSION['usuario_id'])) {
-    header('Location: login.php');
+// If accessed directly instead of through the router
+if (basename($_SERVER['SCRIPT_NAME']) === 'dashboard.php') {
+    header('Location: public/index.php?controller=auth&action=dashboard');
     exit;
 }
+
+// Fallback check (though middleware handles this)
+if (!isset($_SESSION['usuario'])) {
+    header('Location: public/index.php?controller=auth&action=login');
+    exit;
+}
+
+$usuario = $_SESSION['usuario'];
+$pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/public/') !== false) ? '../' : './';
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-  <link rel="stylesheet" href="./assets/css/dashboard.css">
+  <link rel="stylesheet" href="<?= $pathPrefix ?>assets/css/dashboard.css">
 
 <head>
   <meta charset="UTF-8">
@@ -27,13 +39,13 @@ if (!isset($_SESSION['usuario_id'])) {
       <a>Relatórios</a>
     </nav>
     <div class="header-misc">
-      <a>Sair</a>
+      <a href="?controller=auth&action=logout">Sair</a>
       <a>Ajuda</a>
     </div>
   </header>
   <main>
     <div class="dashboard-title">
-      <p>Olá, <?= htmlspecialchars($_SESSION['usuario_nome']); ?></p>
+      <p>Olá, <?= htmlspecialchars($usuario['nome'] ?? ''); ?></p>
     </div>
     <div class="dashboard-container">
       <p>Teste</p>
