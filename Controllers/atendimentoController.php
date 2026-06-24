@@ -143,7 +143,7 @@ class atendimentoController
         $hora_atendimento = $_POST['hora_atendimento'] ?? '';
         $descricao = trim($_POST['descricao'] ?? '');
         $observacao = trim($_POST['observacao'] ?? '');
-        $status = strtolower(trim($_POST['status'] ?? 'ativo'));
+        $status = strtolower(trim($_POST['status'] ?? 'aberto'));
 
         if (!$pessoa_id || !$usuario_id || !$tipo_atendimento_id) {
 
@@ -191,6 +191,56 @@ class atendimentoController
                 'erro' => 'Status inválido.'
             ]);
 
+            return;
+        }
+
+        // RN06: Concluídos exigem observação final
+        if ($status === 'concluido' && $observacao === '') {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Observação final é obrigatória para atendimentos concluídos.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        // RN02: Validar se a pessoa atendida existe
+        $stmtPessoa = $this->pdo->prepare('SELECT status FROM pessoas WHERE id = :id');
+        $stmtPessoa->execute([':id' => $pessoa_id]);
+        if (!$stmtPessoa->fetch()) {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Pessoa atendida não encontrada.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        // RN03: Validar se o tipo de atendimento existe
+        $stmtTipo = $this->pdo->prepare('SELECT status FROM tipos_atendimentos WHERE id = :id');
+        $stmtTipo->execute([':id' => $tipo_atendimento_id]);
+        if (!$stmtTipo->fetch()) {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Tipo de atendimento não encontrado.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        // RN04: Validar se o usuário responsável existe e está ativo
+        $stmtUsuario = $this->pdo->prepare('SELECT status FROM usuarios WHERE id = :id');
+        $stmtUsuario->execute([':id' => $usuario_id]);
+        $usuario = $stmtUsuario->fetch(PDO::FETCH_ASSOC);
+        if (!$usuario) {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Usuário responsável não encontrado.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+        if ($usuario['status'] !== 'ativo') {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Usuário responsável está inativo.'
+            ], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -261,7 +311,7 @@ class atendimentoController
         $hora_atendimento = $_POST['hora_atendimento'] ?? '';
         $descricao = trim($_POST['descricao'] ?? '');
         $observacao = trim($_POST['observacao'] ?? '');
-        $status = strtolower(trim($_POST['status'] ?? 'ativo'));
+        $status = strtolower(trim($_POST['status'] ?? 'aberto'));
 
         if (!$id || !$pessoa_id || !$usuario_id || !$tipo_atendimento_id) {
 
@@ -309,6 +359,56 @@ class atendimentoController
                 'erro' => 'Status inválido.'
             ]);
 
+            return;
+        }
+
+        // RN06: Concluídos exigem observação final
+        if ($status === 'concluido' && $observacao === '') {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Observação final é obrigatória para atendimentos concluídos.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        // RN02: Validar se a pessoa atendida existe
+        $stmtPessoa = $this->pdo->prepare('SELECT status FROM pessoas WHERE id = :id');
+        $stmtPessoa->execute([':id' => $pessoa_id]);
+        if (!$stmtPessoa->fetch()) {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Pessoa atendida não encontrada.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        // RN03: Validar se o tipo de atendimento existe
+        $stmtTipo = $this->pdo->prepare('SELECT status FROM tipos_atendimentos WHERE id = :id');
+        $stmtTipo->execute([':id' => $tipo_atendimento_id]);
+        if (!$stmtTipo->fetch()) {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Tipo de atendimento não encontrado.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
+        // RN04: Validar se o usuário responsável existe e está ativo
+        $stmtUsuario = $this->pdo->prepare('SELECT status FROM usuarios WHERE id = :id');
+        $stmtUsuario->execute([':id' => $usuario_id]);
+        $usuario = $stmtUsuario->fetch(PDO::FETCH_ASSOC);
+        if (!$usuario) {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Usuário responsável não encontrado.'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+        if ($usuario['status'] !== 'ativo') {
+            http_response_code(400);
+            echo json_encode([
+                'erro' => 'Usuário responsável está inativo.'
+            ], JSON_UNESCAPED_UNICODE);
             return;
         }
 
@@ -379,7 +479,7 @@ class atendimentoController
         header('Content-Type: application/json; charset=utf-8');
 
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        $status = strtolower(trim($_POST['status'] ?? 'ativo'));
+        $status = strtolower(trim($_POST['status'] ?? 'aberto'));
 
         if (!$id) {
 
@@ -406,14 +506,16 @@ class atendimentoController
         try {
 
             $stmt = $this->pdo->prepare(
-                'SELECT id FROM atendimentos WHERE id = :id'
+                'SELECT id, observacao FROM atendimentos WHERE id = :id'
             );
 
             $stmt->execute([
                 ':id' => $id
             ]);
 
-            if (!$stmt->fetch()) {
+            $atendimento = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$atendimento) {
 
                 http_response_code(404);
 
@@ -424,9 +526,20 @@ class atendimentoController
                 return;
             }
 
+            $observacao = trim($_POST['observacao'] ?? $atendimento['observacao'] ?? '');
+
+            // RN06: Concluídos exigem observação final
+            if ($status === 'concluido' && $observacao === '') {
+                http_response_code(400);
+                echo json_encode([
+                    'erro' => 'Observação final é obrigatória para atendimentos concluídos.'
+                ], JSON_UNESCAPED_UNICODE);
+                return;
+            }
+
             $sql = "
                 UPDATE atendimentos
-                SET status = :status
+                SET status = :status, observacao = :observacao
                 WHERE id = :id
             ";
 
@@ -434,6 +547,7 @@ class atendimentoController
 
             $stmt->execute([
                 ':status' => $status,
+                ':observacao' => $observacao,
                 ':id' => $id
             ]);
 

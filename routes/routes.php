@@ -10,6 +10,11 @@ require_once __DIR__ . '/../middleware/auth.php';
 $controller = $_GET['controller'] ?? 'auth';
 $action = $_GET['action'] ?? 'login';
 
+// RN01: Somente usuários autenticados acessam a área administrativa.
+if (!($controller === 'auth' && in_array($action, ['login', 'entrar'], true))) {
+  exigirAutenticacao();
+}
+
 $controllerObj = null;
 
 switch ($controller) {
