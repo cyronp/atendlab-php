@@ -321,4 +321,13 @@ class pessoasController
       echo json_encode(['erro' => 'Erro ao inativar pessoa.']);
     }
   }
+
+  public function visualizar(): void
+  {
+    exigirAutenticacao();
+
+    $usuario = usuarioAtual();
+
+    require __DIR__ . '/../Views/pessoas.php';
+  }
 }

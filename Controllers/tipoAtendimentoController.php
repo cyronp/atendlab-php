@@ -318,4 +318,11 @@ class tipoAtendimentoController
       );
     }
   }
+
+  public function visualizar(): void
+  {
+    exigirAutenticacao();
+    $usuario = usuarioAtual();
+    require __DIR__ . '/../Views/tipo_atendimento.php';
+  }
 }

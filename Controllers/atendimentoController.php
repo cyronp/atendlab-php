@@ -57,7 +57,7 @@ class atendimentoController
         }
     }
 
-    public function visualizar(): void
+    public function buscarPorId(): void
     {
         header('Content-Type: application/json; charset=utf-8');
 
@@ -562,5 +562,12 @@ class atendimentoController
                 'erro' => 'Erro ao atualizar status.'
             ], JSON_UNESCAPED_UNICODE);
         }
+    }
+
+    public function visualizar(): void
+    {
+        exigirAutenticacao();
+        $usuario = usuarioAtual();
+        require __DIR__ . '/../Views/atendimentos.php';
     }
 }

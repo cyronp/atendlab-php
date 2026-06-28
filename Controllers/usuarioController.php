@@ -248,4 +248,11 @@ class UsuarioController
       echo json_encode(['erro' => 'Erro ao inativar usuário.'], JSON_UNESCAPED_UNICODE);
     }
   }
+
+  public function visualizar(): void
+  {
+    exigirAutenticacao();
+    $usuario = usuarioAtual();
+    require __DIR__ . '/../Views/usuarios.php';
+  }
 }
