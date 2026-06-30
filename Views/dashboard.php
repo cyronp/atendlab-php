@@ -3,13 +3,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// If accessed directly instead of through the router
 if (basename($_SERVER['SCRIPT_NAME']) === 'dashboard.php') {
     header('Location: public/index.php?controller=auth&action=dashboard');
     exit;
 }
 
-// Fallback check (though middleware handles this)
 if (!isset($_SESSION['usuario'])) {
     header('Location: public/index.php?controller=auth&action=login');
     exit;
@@ -67,7 +65,6 @@ $pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/public/') !== false) ? '../' : 
     <div class="dashboard-extra-container">
       <h2 class="dashboard-extra-title">Resumo Geral do Sistema</h2>
       <div class="dashboard-extra">
-        <!-- Linha 1: Totais do Sistema -->
         <div class="extra-card">
           <span class="extra-title">Total de Atendimentos</span>
           <span class="extra-bignumber" id="total-atendimentos">...</span>
@@ -85,7 +82,6 @@ $pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/public/') !== false) ? '../' : 
           <span class="extra-bignumber" id="total-usuarios">...</span>
         </div>
 
-        <!-- Linha 2: Métricas Detalhadas -->
         <div class="extra-card">
           <span class="extra-title">Atendimentos em Andamento</span>
           <span class="extra-bignumber" id="atendimentos-andamento">...</span>
@@ -106,79 +102,7 @@ $pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/public/') !== false) ? '../' : 
     </div>
   </main>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        Promise.all([
-            fetch('?controller=atendimento&action=listar').then(res => {
-                if (!res.ok) throw new Error('Erro ao carregar atendimentos');
-                return res.json();
-            }),
-            fetch('?controller=pessoas&action=listar').then(res => {
-                if (!res.ok) throw new Error('Erro ao carregar pessoas');
-                return res.json();
-            }),
-            fetch('?controller=tipoatendimento&action=listar').then(res => {
-                if (!res.ok) throw new Error('Erro ao carregar tipos de atendimento');
-                return res.json();
-            }),
-            fetch('?controller=usuarios&action=listar').then(res => {
-                if (!res.ok) throw new Error('Erro ao carregar usuários');
-                return res.json();
-            })
-        ])
-        .then(([atendimentos, pessoas, tipos, usuarios]) => {
-            const esperaCount = atendimentos.filter(a => a.status === 'aberto').length;
-            document.getElementById('espera-count').textContent = esperaCount;
-
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentMonth = now.getMonth() + 1;
-            
-            const finalizadosCount = atendimentos.filter(a => {
-                if (a.status !== 'concluido') return false;
-                if (!a.data_atendimento) return false;
-                const parts = a.data_atendimento.split('-');
-                if (parts.length < 2) return false;
-                const yr = parseInt(parts[0], 10);
-                const mo = parseInt(parts[1], 10);
-                return yr === currentYear && mo === currentMonth;
-            }).length;
-            document.getElementById('finalizados-count').textContent = finalizadosCount;
-
-            const adminsCount = usuarios.filter(u => u.perfil === 'admin' && u.status === 'ativo').length;
-            document.getElementById('admins-count').textContent = adminsCount;
-
-            document.getElementById('total-atendimentos').textContent = atendimentos.length;
-            document.getElementById('total-pessoas').textContent = pessoas.length;
-            document.getElementById('total-tipos').textContent = tipos.length;
-            document.getElementById('total-usuarios').textContent = usuarios.length;
-
-            const andamentoCount = atendimentos.filter(a => a.status === 'em_andamento').length;
-            document.getElementById('atendimentos-andamento').textContent = andamentoCount;
-
-            const concluidosCount = atendimentos.filter(a => a.status === 'concluido').length;
-            document.getElementById('atendimentos-concluidos').textContent = concluidosCount;
-
-            const pessoasAtivas = pessoas.filter(p => p.status === 'ativo').length;
-            document.getElementById('pessoas-ativas').textContent = pessoasAtivas;
-
-            const usuariosAtivos = usuarios.filter(u => u.status === 'ativo').length;
-            document.getElementById('usuarios-ativos').textContent = usuariosAtivos;
-        })
-        .catch(err => {
-            console.error('Falha ao inicializar o dashboard:', err);
-            const errFields = [
-                'espera-count', 'finalizados-count', 'admins-count',
-                'total-atendimentos', 'total-pessoas', 'total-tipos', 'total-usuarios',
-                'atendimentos-andamento', 'atendimentos-concluidos', 'pessoas-ativas', 'usuarios-ativos'
-            ];
-            errFields.forEach(f => {
-                const el = document.getElementById(f);
-                if (el) el.textContent = 'Erro';
-            });
-        });
-    });
-  </script>
+  <script src="<?= $pathPrefix ?>assets/js/dashboard.js"></script>
 </body>
 
 </html>

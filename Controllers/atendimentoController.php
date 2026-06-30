@@ -194,7 +194,6 @@ class atendimentoController
             return;
         }
 
-        // RN06: Concluídos exigem observação final
         if ($status === 'concluido' && $observacao === '') {
             http_response_code(400);
             echo json_encode([
@@ -203,7 +202,6 @@ class atendimentoController
             return;
         }
 
-        // RN02: Validar se a pessoa atendida existe
         $stmtPessoa = $this->pdo->prepare('SELECT status FROM pessoas WHERE id = :id');
         $stmtPessoa->execute([':id' => $pessoa_id]);
         if (!$stmtPessoa->fetch()) {
@@ -214,7 +212,6 @@ class atendimentoController
             return;
         }
 
-        // RN03: Validar se o tipo de atendimento existe
         $stmtTipo = $this->pdo->prepare('SELECT status FROM tipos_atendimentos WHERE id = :id');
         $stmtTipo->execute([':id' => $tipo_atendimento_id]);
         if (!$stmtTipo->fetch()) {
@@ -225,7 +222,6 @@ class atendimentoController
             return;
         }
 
-        // RN04: Validar se o usuário responsável existe e está ativo
         $stmtUsuario = $this->pdo->prepare('SELECT status FROM usuarios WHERE id = :id');
         $stmtUsuario->execute([':id' => $usuario_id]);
         $usuario = $stmtUsuario->fetch(PDO::FETCH_ASSOC);
@@ -362,7 +358,6 @@ class atendimentoController
             return;
         }
 
-        // RN06: Concluídos exigem observação final
         if ($status === 'concluido' && $observacao === '') {
             http_response_code(400);
             echo json_encode([
@@ -371,7 +366,6 @@ class atendimentoController
             return;
         }
 
-        // RN02: Validar se a pessoa atendida existe
         $stmtPessoa = $this->pdo->prepare('SELECT status FROM pessoas WHERE id = :id');
         $stmtPessoa->execute([':id' => $pessoa_id]);
         if (!$stmtPessoa->fetch()) {
@@ -382,7 +376,6 @@ class atendimentoController
             return;
         }
 
-        // RN03: Validar se o tipo de atendimento existe
         $stmtTipo = $this->pdo->prepare('SELECT status FROM tipos_atendimentos WHERE id = :id');
         $stmtTipo->execute([':id' => $tipo_atendimento_id]);
         if (!$stmtTipo->fetch()) {
@@ -393,7 +386,6 @@ class atendimentoController
             return;
         }
 
-        // RN04: Validar se o usuário responsável existe e está ativo
         $stmtUsuario = $this->pdo->prepare('SELECT status FROM usuarios WHERE id = :id');
         $stmtUsuario->execute([':id' => $usuario_id]);
         $usuario = $stmtUsuario->fetch(PDO::FETCH_ASSOC);
@@ -528,7 +520,6 @@ class atendimentoController
 
             $observacao = trim($_POST['observacao'] ?? $atendimento['observacao'] ?? '');
 
-            // RN06: Concluídos exigem observação final
             if ($status === 'concluido' && $observacao === '') {
                 http_response_code(400);
                 echo json_encode([
