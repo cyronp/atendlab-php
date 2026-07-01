@@ -48,17 +48,17 @@ $pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/public/') !== false) ? '../' : 
       <div class="dashboard-cards">
         <span class="card-title">Atendimentos em Espera</span>
         <p class="card-bignumber" id="espera-count">...</p>
-        <a class="card-link" href="?controller=atendimento&action=listar">Acessar Atendimentos</a>
+        <a class="card-link" href="?controller=atendimento&action=visualizar">Acessar Atendimentos</a>
       </div>
       <div class="dashboard-cards">
         <span class="card-title">Atendimentos finalizados este mês</span>
         <p class="card-bignumber" id="finalizados-count">...</p>
-        <a class="card-link" href="?controller=atendimento&action=listar">Acessar Atendimentos</a>
+        <a class="card-link" href="?controller=atendimento&action=visualizar">Acessar Atendimentos</a>
       </div>
       <div class="dashboard-cards">
         <span class="card-title">Administradores atendendo</span>
         <p class="card-bignumber" id="admins-count">...</p>
-        <a class="card-link" href="?controller=usuarios&action=listar">Acessar Usuários</a>
+        <a class="card-link" href="?controller=usuarios&action=visualizar">Acessar Usuários</a>
       </div>
     </div>
 

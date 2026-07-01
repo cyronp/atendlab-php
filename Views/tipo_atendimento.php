@@ -61,7 +61,7 @@ $pathPrefix = (strpos($_SERVER['SCRIPT_NAME'], '/public/') !== false) ? '../' : 
                         <th>Nome</th>
                         <th>Descrição</th>
                         <th>Status</th>
-                        <th class="th-actions">Ações</th>
+                        <th class="th-actions">Editar</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
